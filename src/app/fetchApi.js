@@ -1,15 +1,16 @@
 export async function fetchData(url) {
-    const res = await fetch(`${process.env.HOST}${url}`, {
+    const res = await fetch(`${process.env.HOST}tutorial/${url}`, {
         method: 'GET',
         headers: {
             'accept': 'application/json',
             'token': process.env.API_TOKEN
         },
+        // next: { revalidate: 60 }
     });
-    if (!res.ok) {
-        console.error(`Fetch failed: ${res.status} ${res.statusText}`);
-        return null;
-        // throw new Error("Error fetching data from server");
-    }
-    return res.json();
+    return res;
+
+    // if (!res.ok) {
+    //     throw new Error(`Failed to fetch: ${res.status}`);
+    // }
+    // return res.json();
 }

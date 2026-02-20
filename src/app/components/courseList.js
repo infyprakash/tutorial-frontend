@@ -1,17 +1,19 @@
 import Link from "next/link";
 
 export default function CourseList({ courses }) {
+    console.log(courses);
     return (
-        <div className="grid sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {courses.map((course) => (
-                <div key={course.id}>
-                    <Link
-                        href={`/${course.id}`}
-                        className="h-32 flex items-center justify-center text-lg/7 text-center font-bold shadow w-full uppercase hover:brightness-90 transition-all"
-                    >
+                <Link
+                    key={course.id}
+                    href={`/${course.slug}`}
+                    className="group h-40 flex items-center justify-center p-4 bg-white/90 backdrop-blur-sm border border-white/20 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 hover:scale-[1.03] hover:bg-white text-center"
+                >
+                    <span className="text-lg font-bold text-gray-800 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-blue-600 group-hover:to-purple-600 transition-all duration-300">
                         {course.name}
-                    </Link>
-                </div>
+                    </span>
+                </Link>
             ))}
         </div>
     );
