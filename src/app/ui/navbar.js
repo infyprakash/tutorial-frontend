@@ -13,7 +13,8 @@ const Navbar = ({ isLoggedIn, handleLogout }) => {
 
     const navigation = [
         { name: "Home", href: "/" },
-        { name: "Tutorials", href: "/tutorials" },
+        { name: "Courses", href: "/courses" },
+        { name: "Nec License", href: "/nec-license" },
         { name: "About", href: "/about" },
         { name: "Contact", href: "/contact" },
 
@@ -30,11 +31,19 @@ const Navbar = ({ isLoggedIn, handleLogout }) => {
                 className="w-full max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center h-16"
                 aria-label="Primary Navigation"
             >
-                {/* Logo + Brand */}
                 <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-gray-200 dark:bg-gray-700 rounded-full flex-shrink-0 flex items-center justify-center">
-                        <span className="text-sm font-bold text-gray-500 dark:text-gray-300">Logo</span>
-                    </div>
+                    {/* Logo as a clickable link */}
+                    <Link href="/">
+                        <div className="w-12 h-12 bg-gray-200 dark:bg-gray-700 rounded-full flex-shrink-0 overflow-hidden">
+                            <img
+                                src="/ezexplanation_logo.png"
+                                alt="Logo"
+                                className="w-full h-full object-cover"
+                            />
+                        </div>
+                    </Link>
+
+                    {/* Text link */}
                     <Link
                         href="/"
                         className="text-2xl font-bold text-gray-800 dark:text-white hover:text-blue-600 transition-colors ml-2"

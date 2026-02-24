@@ -1,14 +1,68 @@
-import Link from "next/link";
+import Link from "next/link"
 import { fetchData } from "../fetchApi";
+import AdsenseAd from "../components/AdsenseAd";
+
+export async function generateMetadata({ params }) {
+    const { course_slug } = await params;
+    const response = await fetchData(`courses/detail/${course_slug}`);
+    const course = await response.json();
+
+    return {
+        title: `${course.name} Notes | IOE Nepal Syllabus`,
+        description: course.description,
+        keywords: [
+            course.name,
+            "IOE Nepal syllabus",
+            "Engineering notes",
+            `${course.name} tutorial`,
+        ],
+        openGraph: {
+            title: `${course.name} | IOE Notes`,
+            description: course.description,
+            url: `${process.env.NEXT_PUBLIC_HOST}${course_slug}`,
+            siteName: "ezexplanation",
+            type: "article",
+        },
+        twitter: {
+            card: "summary_large_image",
+            title: course.name,
+            description: course.description,
+        },
+        alternates: {
+            canonical: `${process.env.NEXT_PUBLIC_HOST}${course_slug}`,
+        },
+    };
+}
+
 
 export default async function CourseDetail({ params }) {
     const { course_slug } = await params;
     const response = await fetchData(`chapters/course/${course_slug}`);
     const chapters = await response.json();
+    console.log(chapters);
+
+    const response2 = await fetchData(`courses/detail/${course_slug}`);
+    const course = await response2.json();
+
+    const jsonLd = {
+        "@context": "https://schema.org",
+        "@type": "Course",
+        name: course.name,
+        description: course.description,
+        provider: {
+            "@type": "Organization",
+            name: "ezexplanation",
+            sameAs: `${process.env.NEXT_PUBLIC_HOST}`,
+        },
+    };
 
     if (!response.ok) {
         return (
             <main className="min-h-screen flex items-center justify-center bg-stone-50">
+                <script
+                    type="application/ld+json"
+                    dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+                />
                 <div className="text-center max-w-md p-8">
                     <h1 className="text-3xl font-serif text-stone-800 mb-3">
                         Table of Contents
@@ -22,45 +76,62 @@ export default async function CourseDetail({ params }) {
     }
 
     return (
-        // Use flex to center the card both horizontally and vertically
-        <main className="min-h-screen flex items-center justify-center bg-stone-50 px-4 sm:px-6 lg:px-8">
-            {/* Centered card with warm paper background and refined shadow */}
-            <div className="w-full max-w-3xl bg-[#faf7f2] rounded-xl shadow-lg border border-gray-200/80 p-8 md:p-12 transition-shadow hover:shadow-xl">
-                {/* Book‑style header with decorative underline */}
-                <header className="mb-12 text-center border-b border-amber-200/70 pb-6">
-                    <h1 className="text-4xl md:text-5xl font-serif text-stone-800 tracking-tight">
+        <main className="min-h-screen bg-stone-50 py-12 px-4 sm:px-6 lg:px-8">
+            <div className="max-w-3xl mx-auto bg-white rounded-lg shadow-sm border border-gray-200 p-8 md:p-12">
+                {/* Header – clean and minimal */}
+                <header className="mb-10 border-b border-gray-200 pb-6">
+                    <h1 className="text-3xl font-semibold text-gray-900 tracking-tight">
                         Contents
                     </h1>
-                    <p className="mt-2 text-stone-400 text-sm uppercase tracking-widest">
+                    <p className="mt-2 text-gray-500 text-sm uppercase tracking-widest">
                         {chapters?.length || 0} {chapters?.length === 1 ? 'chapter' : 'chapters'}
                     </p>
                 </header>
 
-                {/* Chapters list – styled like a book’s table of contents */}
-                <div className="space-y-8">
-                    {chapters.map((chapter, idx) => (
-                        <section key={idx} className="space-y-2">
-                            {/* Chapter heading with small amber bullet (echoes sidebar) */}
-                            <h2 className="font-serif text-lg font-medium text-stone-800 mb-2 flex items-center gap-2">
-                                <span className="w-1.5 h-1.5 rounded-full bg-amber-600/60" />
-                                <span className="uppercase tracking-wide text-xs text-amber-800">
-                                    {chapter.name}
+                {/* 🔥 Ad Placement */}
+                <div className="mb-10">
+                    <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                        <AdsenseAd />
+                    </div>
+                </div>
+
+                {/* Chapters list */}
+                <div className="space-y-6">
+                    {chapters.map((chapter, chapterIndex) => (
+                        <section key={chapterIndex}>
+                            {/* Chapter heading with number */}
+                            <h2 className="flex items-center text-lg font-bold text-gray-800 mb-2 pb-1 border-b border-gray-100">
+                                <span className="text-gray-400 w-12 text-sm font-mono">
+                                    {chapterIndex + 1}.
                                 </span>
+                                <span>{chapter.name}</span>
                             </h2>
 
-                            {/* Subchapters indented, each link styled like sidebar topics */}
-                            <ul className="space-y-1 ml-4">
-                                {chapter.subchapters.map((topic, tid) => (
-                                    <li key={`${tid}-${topic.name}`}>
+                            {/* Subchapters list */}
+                            <ul className="space-y-1">
+                                {chapter.subchapters.map((topic, topicIndex) => (
+                                    <li key={`${chapterIndex}-${topicIndex}`}>
                                         <Link
                                             href={`/${course_slug}/${topic.slug}`}
-                                            // Hover effect: background, border, and bullet slide
-                                            className="group flex items-start gap-2 px-3 py-1.5 text-stone-600 hover:text-stone-900 hover:bg-amber-50/80 rounded-md transition-all duration-200 text-sm border-l-2 border-transparent hover:border-amber-400"
+                                            className="flex items-center py-1 px-2 -mx-2 rounded hover:bg-gray-50 transition-colors group"
                                         >
-                                            <span className="text-amber-600/70 group-hover:text-amber-700 group-hover:translate-x-0.5 transition-transform duration-200">
-                                                ▹
+                                            {/* Section number (e.g., 1.1) */}
+                                            <span className="text-gray-400 w-12 text-right text-sm font-mono mr-3">
+                                                {chapterIndex + 1}.{topicIndex + 1}
                                             </span>
-                                            <span className="flex-1">{topic.name}</span>
+
+                                            {/* Topic title */}
+                                            <span className="flex-1 text-gray-700 group-hover:text-blue-600 truncate">
+                                                {topic.name}
+                                            </span>
+
+                                            {/* Dotted leader */}
+                                            <span className="flex-1 border-b border-dotted border-gray-300 mx-2"></span>
+
+                                            {/* Right arrow – appears on hover */}
+                                            <span className="text-gray-400 group-hover:text-blue-600 ml-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                →
+                                            </span>
                                         </Link>
                                     </li>
                                 ))}
@@ -69,9 +140,9 @@ export default async function CourseDetail({ params }) {
                     ))}
                 </div>
 
-                {/* Decorative colophon with subtle italic text */}
-                <div className="mt-16 text-center text-stone-400 text-xs font-serif italic border-t border-amber-200/70 pt-6">
-                    <p>Begin your journey on the next page</p>
+                {/* Optional subtle footer (can be removed if you prefer) */}
+                <div className="mt-16 text-center text-gray-400 text-xs italic border-t border-gray-200 pt-6">
+                    <p>Begin your journey</p>
                 </div>
             </div>
         </main>

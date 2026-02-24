@@ -1,10 +1,15 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import { Poppins } from 'next/font/google';
+import Footer from "./ui/footer";
+import { FaTwitter, FaGithub, FaLinkedin, FaFacebook } from 'react-icons/fa';
 
+import AdSense from "./components/adsense";
+import GoogleAnalytics from "./components/googleanalytics";
 
 import "./globals.css";
 import Navbar from "./ui/navbar";
 import { SidebarProvider } from "./contexts/SidebarContext";
+import { NecSidebarProvider } from "./contexts/NecSidebarContext";
 import { getSession } from "./auth/utils";
 
 const geistSans = Geist({
@@ -37,13 +42,62 @@ export default async function RootLayout({ children }) {
   const session = await getSession()
   const isLoggedIn = !!session?.token
 
+  const footerColumns = [
+    // {
+    //   title: 'Product',
+    //   links: [
+    //     { label: 'Features', href: '/features' },
+    //     { label: 'Pricing', href: '/pricing' },
+    //     { label: 'FAQ', href: '/faq' },
+    //   ],
+    // },
+    {
+      title: 'Company',
+      links: [
+        { label: 'About', href: '/about' },
+        // { label: 'Blog', href: '/blog' },
+        { label: 'Contact', href: '/contact' },
+      ],
+    },
+    // {
+    //   title: 'Legal',
+    //   links: [
+    //     { label: 'Privacy', href: '/privacy' },
+    //     { label: 'Terms', href: '/terms' },
+    //   ],
+    // },
+  ];
+
+  const socialLinks = [
+    // { platform: 'Twitter', href: 'https://twitter.com/yourcompany', icon: <FaTwitter /> },
+    { platform: 'Facebook', href: 'https://www.facebook.com/easyexplanation26', icon: <FaFacebook /> },
+    { platform: 'LinkedIn', href: 'https://www.linkedin.com/company/ezexplanation/', icon: <FaLinkedin /> },
+  ];
+
   return (
     <html lang="en">
       <body className={`${poppins.variable} font-sans antialiased`}>
-        <SidebarProvider>
-          <Navbar isLoggedIn={isLoggedIn} />
-          {children}
-        </SidebarProvider>
+        <NecSidebarProvider>
+          <SidebarProvider>
+            <Navbar isLoggedIn={isLoggedIn} />
+            <GoogleAnalytics />
+
+            {children}
+
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2413501485945953"
+              crossorigin="anonymous"></script>
+            <div className="max-w-7xl mx-auto px-4 py-8">
+              <AdSense />
+            </div>
+
+            <Footer
+              logo="/ezexplanation_logo.png"   // Use your actual logo path
+              columns={footerColumns}
+              socialLinks={socialLinks}
+              copyright={`© ${new Date().getFullYear()} Infography Technologies. All rights reserved.`}
+            />
+          </SidebarProvider>
+        </NecSidebarProvider>
       </body>
     </html>
   );

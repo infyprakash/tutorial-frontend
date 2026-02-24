@@ -1,6 +1,7 @@
 import CourseList from "./components/courseList";
 import { fetchData } from "./fetchApi";
 import Hero from "./ui/hero";
+import AdsenseAd from "./components/AdsenseAd";
 
 export const metadata = {
   title: "Programming & Technology Courses | TutorialHub",
@@ -42,6 +43,13 @@ export default async function Home() {
         <Hero />
       </div>
 
+      {/* Ad Section */}
+      <div className="max-w-4xl mx-auto px-6 mt-10">
+        <div className="bg-white rounded-2xl shadow-md p-4">
+          <AdsenseAd />
+        </div>
+      </div>
+
       {/* Course Section */}
       <section
         id="courses"
@@ -62,7 +70,7 @@ export default async function Home() {
           </div>
           <div className="mt-6 md:mt-0">
             <a
-              href="#all-courses"
+              href="/courses"
               className="inline-flex items-center text-blue-600 font-medium hover:text-blue-800 transition-colors"
             >
               View all courses

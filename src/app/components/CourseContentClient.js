@@ -1,10 +1,11 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useSidebar } from "../contexts/SidebarContext";
 import EditCourseContentArea from "../ui/editCourseContent";
+import AdsenseAd from "./AdsenseAd";
 
 export default function CourseContentClient({
     chapters,
@@ -17,7 +18,9 @@ export default function CourseContentClient({
     const pathname = usePathname();
     const { mobileSidebarOpen, setMobileSidebarOpen } = useSidebar();
 
-    // Flatten all subchapters to easily find prev/next
+    const activeItemRef = useRef(null);
+
+    // Flatten all subchapters for prev/next
     const allSubchapters = useMemo(() => {
         return chapters.flatMap((ch) =>
             ch.subchapters.map((sub) => ({
@@ -30,13 +33,15 @@ export default function CourseContentClient({
     const currentIndex = allSubchapters.findIndex(
         (sub) => sub.slug === subchapter_slug
     );
-    const prevSub = currentIndex > 0 ? allSubchapters[currentIndex - 1] : null;
+
+    const prevSub =
+        currentIndex > 0 ? allSubchapters[currentIndex - 1] : null;
     const nextSub =
         currentIndex < allSubchapters.length - 1
             ? allSubchapters[currentIndex + 1]
             : null;
 
-    // Lock body scroll when mobile sidebar is open
+    // Lock body scroll on mobile sidebar open
     useEffect(() => {
         if (mobileSidebarOpen) {
             document.body.style.overflow = "hidden";
@@ -48,18 +53,17 @@ export default function CourseContentClient({
         };
     }, [mobileSidebarOpen]);
 
-    // Sidebar classes for mobile overlay
+    // Sidebar classes (mobile + desktop)
     const mobileSidebarClasses = `
-        fixed inset-y-0 left-0 z-40 w-4/5 max-w-sm bg-[#faf7f2] 
-        shadow-xl border-r border-gray-200/80 pl-4 pr-6 py-6 
+        fixed inset-y-0 left-0 z-40 w-4/5 max-w-sm bg-white 
+        shadow-xl border-r border-gray-200 pl-4 pr-6 py-6 
         overflow-y-auto transition-transform duration-300 ease-in-out
         ${mobileSidebarOpen ? "translate-x-0" : "-translate-x-full"}
         top-16 h-[calc(100vh-4rem)]
     `;
 
-    // Sidebar classes for desktop (original grid behaviour)
     const desktopSidebarClasses = `
-        md:col-span-3 bg-[#faf7f2] rounded-l-xl border-r border-gray-200/80 
+        md:col-span-3 bg-white rounded-l-xl border-r border-gray-200 
         pl-4 pr-6 py-6 overflow-y-auto sticky top-4 max-h-[calc(100vh-2rem)] 
         transition-all duration-300 scrollbar-thin scrollbar-thumb-gray-300 
         scrollbar-track-transparent
@@ -71,64 +75,100 @@ export default function CourseContentClient({
             {/* Mobile backdrop */}
             {mobileSidebarOpen && (
                 <div
-                    className="fixed inset-0 bg-black/50 z-30 md:hidden"
+                    className="fixed inset-0 bg-black/20 backdrop-blur-sm z-30 md:hidden"
                     onClick={() => setMobileSidebarOpen(false)}
                 />
             )}
 
-            {/* Sidebar – mobile overlay + desktop grid */}
+            {/* Mobile Sidebar */}
             <aside className={`${mobileSidebarClasses} md:hidden`}>
-                {/* Optional close button inside sidebar */}
                 <button
                     onClick={() => setMobileSidebarOpen(false)}
-                    className="absolute top-4 right-4 text-gray-500 hover:text-gray-800 md:hidden"
+                    className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 md:hidden"
                     aria-label="Close sidebar"
                 >
-                    <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    <svg
+                        className="h-5 w-5"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                    >
+                        <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M6 18L18 6M6 6l12 12"
+                        />
                     </svg>
                 </button>
 
-                <h2 className="text-sm font-serif font-semibold text-gray-700 uppercase tracking-wider mb-4 pb-2 border-b border-amber-200/70">
+                <h2 className="text-sm font-semibold text-gray-700 uppercase tracking-wider mb-4 pb-2 border-b border-gray-200">
                     Contents
                 </h2>
-                {chapters.map((chapter, idx) => (
-                    <div key={idx} className="mb-6 last:mb-0">
-                        <h3 className="font-serif text-sm font-medium text-gray-800 mb-2 flex items-center gap-2">
-                            <span className="w-1.5 h-1.5 rounded-full bg-amber-600/60" />
-                            <span className="uppercase tracking-wide text-xs text-amber-800">
-                                {chapter.name}
-                            </span>
+
+                {chapters.map((chapter, chapterIdx) => (
+                    <div key={chapterIdx} className="mb-6 last:mb-0">
+                        <h3 className="text-sm font-bold text-gray-800 mb-2 pb-1 border-b border-gray-100">
+                            {chapter.name}
                         </h3>
+
                         <ul className="space-y-1">
-                            {chapter.subchapters.map((topic) => {
+                            {chapter.subchapters.map((topic, topicIdx) => {
                                 const isActive = topic.slug === subchapter_slug;
+
                                 return (
-                                    <li key={topic.slug}>
+                                    <li
+                                        key={topic.slug}
+                                        ref={isActive ? activeItemRef : null}
+                                    >
                                         <Link
                                             href={`/${course_slug}/${topic.slug}`}
-                                            className={`
-                                                group flex items-start gap-2 pl-2 pr-3 py-1.5 rounded-md 
-                                                transition-all duration-200 text-sm border-l-2 
-                                                ${isActive
-                                                    ? "border-amber-600 bg-amber-50/80 text-gray-900"
-                                                    : "border-transparent text-gray-600 hover:text-gray-900 hover:bg-amber-50/80 hover:border-amber-400"
-                                                }
-                                            `}
                                             onClick={() => setMobileSidebarOpen(false)}
+                                            className={`
+                                                flex items-center py-1.5 px-2 rounded-md
+                                                transition-all duration-200 group
+                                                ${isActive
+                                                    ? "bg-blue-50 border-l-2 border-blue-600 pl-3"
+                                                    : "hover:bg-gray-50 border-l-2 border-transparent"
+                                                }
+                                            `}
                                         >
+                                            {/* Section number */}
                                             <span
                                                 className={`
-                                                    transition-transform duration-200 
+                                                    w-8 text-right text-sm font-mono mr-2
                                                     ${isActive
-                                                        ? "text-amber-700 translate-x-0.5"
-                                                        : "text-amber-600/70 group-hover:text-amber-700 group-hover:translate-x-0.5"
+                                                        ? "text-blue-700"
+                                                        : "text-gray-400 group-hover:text-gray-600"
                                                     }
                                                 `}
                                             >
-                                                ▹
+                                                {chapterIdx + 1}.{topicIdx + 1}
                                             </span>
-                                            <span className="flex-1">{topic.name}</span>
+
+                                            {/* Title */}
+                                            <span
+                                                className={`
+                                                    flex-1 text-sm truncate
+                                                    ${isActive
+                                                        ? "text-blue-700 font-medium"
+                                                        : "text-gray-700 group-hover:text-blue-600"
+                                                    }
+                                                `}
+                                            >
+                                                {topic.name}
+                                            </span>
+
+                                            {/* Arrow on hover (desktop only) */}
+                                            <span
+                                                className={`
+                                                    ml-2 text-gray-400 group-hover:text-blue-600
+                                                    opacity-0 group-hover:opacity-100 transition-opacity
+                                                    hidden sm:inline
+                                                `}
+                                            >
+                                                →
+                                            </span>
                                         </Link>
                                     </li>
                                 );
@@ -138,47 +178,68 @@ export default function CourseContentClient({
                 ))}
             </aside>
 
-            {/* Desktop sidebar (hidden on mobile) */}
+            {/* Desktop Sidebar */}
             <aside className={`hidden md:block ${desktopSidebarClasses}`}>
-                <h2 className="text-sm font-serif font-semibold text-gray-700 uppercase tracking-wider mb-4 pb-2 border-b border-amber-200/70">
+                <h2 className="text-sm font-semibold text-gray-700 uppercase tracking-wider mb-4 pb-2 border-b border-gray-200">
                     Contents
                 </h2>
-                {chapters.map((chapter, idx) => (
-                    <div key={idx} className="mb-6 last:mb-0">
-                        <h3 className="font-serif text-sm font-medium text-gray-800 mb-2 flex items-center gap-2">
-                            <span className="w-1.5 h-1.5 rounded-full bg-amber-600/60" />
-                            <span className="uppercase tracking-wide text-xs text-amber-800">
-                                {chapter.name}
-                            </span>
+
+                {chapters.map((chapter, chapterIdx) => (
+                    <div key={chapterIdx} className="mb-6 last:mb-0">
+                        <h3 className="text-sm font-bold text-gray-800 mb-2 pb-1 border-b border-gray-100">
+                            {chapter.name}
                         </h3>
+
                         <ul className="space-y-1">
-                            {chapter.subchapters.map((topic) => {
+                            {chapter.subchapters.map((topic, topicIdx) => {
                                 const isActive = topic.slug === subchapter_slug;
+
                                 return (
-                                    <li key={topic.slug}>
+                                    <li
+                                        key={topic.slug}
+                                        ref={isActive ? activeItemRef : null}
+                                    >
                                         <Link
                                             href={`/${course_slug}/${topic.slug}`}
                                             className={`
-                                                group flex items-start gap-2 pl-2 pr-3 py-1.5 rounded-md 
-                                                transition-all duration-200 text-sm border-l-2 
+                                                flex items-center py-1.5 px-2 rounded-md
+                                                transition-all duration-200 group
                                                 ${isActive
-                                                    ? "border-amber-600 bg-amber-50/80 text-gray-900"
-                                                    : "border-transparent text-gray-600 hover:text-gray-900 hover:bg-amber-50/80 hover:border-amber-400"
+                                                    ? "bg-blue-50 border-l-2 border-blue-600 pl-3"
+                                                    : "hover:bg-gray-50 border-l-2 border-transparent"
                                                 }
                                             `}
                                         >
                                             <span
                                                 className={`
-                                                    transition-transform duration-200 
+                                                    w-8 text-right text-sm font-mono mr-2
                                                     ${isActive
-                                                        ? "text-amber-700 translate-x-0.5"
-                                                        : "text-amber-600/70 group-hover:text-amber-700 group-hover:translate-x-0.5"
+                                                        ? "text-blue-700"
+                                                        : "text-gray-400 group-hover:text-gray-600"
                                                     }
                                                 `}
                                             >
-                                                ▹
+                                                {chapterIdx + 1}.{topicIdx + 1}
                                             </span>
-                                            <span className="flex-1">{topic.name}</span>
+                                            <span
+                                                className={`
+                                                    flex-1 text-sm truncate
+                                                    ${isActive
+                                                        ? "text-blue-700 font-medium"
+                                                        : "text-gray-700 group-hover:text-blue-600"
+                                                    }
+                                                `}
+                                            >
+                                                {topic.name}
+                                            </span>
+                                            <span
+                                                className={`
+                                                    ml-2 text-gray-400 group-hover:text-blue-600
+                                                    opacity-0 group-hover:opacity-100 transition-opacity
+                                                `}
+                                            >
+                                                →
+                                            </span>
                                         </Link>
                                     </li>
                                 );
@@ -188,18 +249,18 @@ export default function CourseContentClient({
                 ))}
             </aside>
 
-            {/* Main content area */}
+            {/* Main Content Area */}
             <section
                 className={`
                     ${fullWidth ? "md:col-span-12" : "md:col-span-9"}
-                    bg-[#fefcf7] rounded-r-xl shadow-md border border-gray-200 border-l-0 p-8 md:p-12 
-                    relative transition-shadow hover:shadow-lg
+                    bg-white rounded-r-xl shadow-sm border border-gray-200 border-l-0 p-6 md:p-10
+                    relative transition-shadow
                 `}
             >
-                {/* Sidebar toggle (desktop) */}
+                {/* Sidebar toggle */}
                 <button
                     onClick={() => setFullWidth(!fullWidth)}
-                    className="absolute top-5 right-5 text-sm text-gray-500 hover:text-gray-800 bg-white/80 backdrop-blur-sm border border-gray-200 rounded-full px-4 py-1.5 transition-colors focus:outline-none focus:ring-2 focus:ring-amber-300 shadow-sm"
+                    className="absolute top-4 right-4 text-sm text-gray-500 hover:text-gray-800 bg-white border border-gray-200 rounded-full px-4 py-1.5 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-300 shadow-sm hover:bg-gray-50"
                 >
                     {fullWidth ? "📖 Show sidebar" : "📚 Hide sidebar"}
                 </button>
@@ -211,31 +272,27 @@ export default function CourseContentClient({
                         subchapter_slug={subchapter_slug}
                     />
                 ) : (
-                    <article
-                        className="prose prose-lg prose-stone max-w-3xl mx-auto font-serif text-gray-800 leading-relaxed 
-                                   px-6 md:px-8 
-                                   [&>p:first-of-type]:first-letter:text-5xl 
-                                   [&>p:first-of-type]:first-letter:font-bold 
-                                   [&>p:first-of-type]:first-letter:float-left 
-                                   [&>p:first-of-type]:first-letter:mr-3 
-                                   [&>p:first-of-type]:first-letter:mt-1 
-                                   [&>p:first-of-type]:first-letter:text-amber-700"
-                    >
-                        <div dangerouslySetInnerHTML={{ __html: courseContent.content }} />
+                    <article className="prose prose-lg max-w-3xl mx-auto text-gray-800 leading-relaxed px-4 sm:px-6">
+                        <div
+                            dangerouslySetInnerHTML={{
+                                __html: courseContent.content,
+                            }}
+                        />
+                        {/* ads here  */}
+                        <div className="my-12">
+                            <AdsenseAd />
+                        </div>
                     </article>
                 )}
 
-                {/* Previous / Next navigation */}
+                {/* Previous / Next Navigation */}
                 <div className="mt-12 flex justify-between border-t border-gray-200 pt-6">
                     {prevSub ? (
                         <Link
                             href={`/${course_slug}/${prevSub.slug}`}
-                            className="text-gray-500 hover:text-gray-900 flex items-center gap-1 transition-colors text-sm font-medium group"
+                            className="text-gray-500 hover:text-blue-600 flex items-center gap-1 transition-colors text-sm font-medium group"
                         >
-                            <span
-                                className="group-hover:-translate-x-1 transition-transform"
-                                aria-hidden="true"
-                            >
+                            <span className="group-hover:-translate-x-1 transition-transform">
                                 ←
                             </span>
                             <span className="truncate max-w-[150px] md:max-w-xs">
@@ -245,18 +302,16 @@ export default function CourseContentClient({
                     ) : (
                         <div />
                     )}
+
                     {nextSub ? (
                         <Link
                             href={`/${course_slug}/${nextSub.slug}`}
-                            className="text-gray-500 hover:text-gray-900 flex items-center gap-1 transition-colors text-sm font-medium group"
+                            className="text-gray-500 hover:text-blue-600 flex items-center gap-1 transition-colors text-sm font-medium group"
                         >
                             <span className="truncate max-w-[150px] md:max-w-xs">
                                 {nextSub.name}
                             </span>
-                            <span
-                                className="group-hover:translate-x-1 transition-transform"
-                                aria-hidden="true"
-                            >
+                            <span className="group-hover:translate-x-1 transition-transform">
                                 →
                             </span>
                         </Link>
