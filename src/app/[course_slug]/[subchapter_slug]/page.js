@@ -5,34 +5,34 @@ import { fetchData } from "../../fetchApi";
 import { getSession } from "../../auth/utils";
 
 
-export async function generateStaticParams() {
-    const res_courses = await fetchData("courses/");
-    const courses = await res_courses.json();
+// export async function generateStaticParams() {
+//     const res_courses = await fetchData("courses/");
+//     const courses = await res_courses.json();
 
-    if (!res_courses.ok) {
-        return [];
-    }
+//     if (!res_courses.ok) {
+//         return [];
+//     }
 
-    const params = [];
+//     const params = [];
 
-    for (const course of courses) {
-        try {
-            const chapters = await fetchData(`chapters/course/${course.slug}`);
-            const chaptersJson = await chapters.json();
-            chaptersJson.forEach((chapter) => {
-                chapter.subchapters.forEach((sub) => {
-                    params.push({
-                        course_slug: course.slug,
-                        subchapter_slug: sub.slug,
-                    });
-                });
-            });
-        } catch (error) {
-            console.error(error);
-        }
-    }
-    return params;
-}
+//     for (const course of courses) {
+//         try {
+//             const chapters = await fetchData(`chapters/course/${course.slug}`);
+//             const chaptersJson = await chapters.json();
+//             chaptersJson.forEach((chapter) => {
+//                 chapter.subchapters.forEach((sub) => {
+//                     params.push({
+//                         course_slug: course.slug,
+//                         subchapter_slug: sub.slug,
+//                     });
+//                 });
+//             });
+//         } catch (error) {
+//             console.error(error);
+//         }
+//     }
+//     return params;
+// }
 
 export async function generateMetadata({ params }) {
     const { course_slug, subchapter_slug } = await params;
