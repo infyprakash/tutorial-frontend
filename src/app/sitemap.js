@@ -22,14 +22,14 @@ export default async function sitemap() {
 
     const chapterUrls = chapters.map(chapter => ({
         url: `chapters/sitemap/${chapter.course.slug}/${chapter.slug}`,
-        lastModified: parseDate(course.created_at),
+        lastModified: parseDate(chapter.created_at),
         changeFrequency: "weekly",
         priority: 0.7,
     }));
 
     const topicUrls = topics.map(topic => ({
         url: `subchapters/sitemap/${topic.chapter.course.slug}/${topic.chapter.slug}/${topic.slug}`,
-        lastModified: parseDate(course.created_at),
+        lastModified: parseDate(topic.created_at),
         changeFrequency: "weekly",
         priority: 0.6,
     }));
