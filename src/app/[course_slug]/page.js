@@ -39,7 +39,6 @@ export default async function CourseDetail({ params }) {
     const { course_slug } = await params;
     const response = await fetchData(`chapters/course/${course_slug}`);
     const chapters = await response.json();
-    console.log(chapters);
 
     const response2 = await fetchData(`courses/detail/${course_slug}`);
     const course = await response2.json();
@@ -115,18 +114,13 @@ export default async function CourseDetail({ params }) {
                                             href={`/${course_slug}/${topic.slug}`}
                                             className="flex items-center py-1 px-2 -mx-2 rounded hover:bg-gray-50 transition-colors group"
                                         >
-                                            {/* Section number (e.g., 1.1) */}
-                                            <span className="text-gray-400 w-12 text-right text-sm font-mono mr-3">
-                                                {chapterIndex + 1}.{topicIndex + 1}
-                                            </span>
+                                            {/* Empty spacer – keeps alignment with chapter numbers */}
+                                            <span className="text-gray-400 w-12 text-right text-sm font-mono mr-3" aria-hidden="true"></span>
 
-                                            {/* Topic title */}
-                                            <span className="flex-1 text-gray-700 group-hover:text-blue-600 truncate">
+                                            {/* Topic title – full name, no truncation */}
+                                            <span className="flex-1 text-gray-700 group-hover:text-blue-600">
                                                 {topic.name}
                                             </span>
-
-                                            {/* Dotted leader */}
-                                            <span className="flex-1 border-b border-dotted border-gray-300 mx-2"></span>
 
                                             {/* Right arrow – appears on hover */}
                                             <span className="text-gray-400 group-hover:text-blue-600 ml-2 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -140,7 +134,7 @@ export default async function CourseDetail({ params }) {
                     ))}
                 </div>
 
-                {/* Optional subtle footer (can be removed if you prefer) */}
+                {/* Optional subtle footer */}
                 <div className="mt-16 text-center text-gray-400 text-xs italic border-t border-gray-200 pt-6">
                     <p>Begin your journey</p>
                 </div>

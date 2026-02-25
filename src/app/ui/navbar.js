@@ -17,7 +17,6 @@ const Navbar = ({ isLoggedIn, handleLogout }) => {
         { name: "Nec License", href: "/nec-license" },
         { name: "About", href: "/about" },
         { name: "Contact", href: "/contact" },
-
     ];
 
     const isActive = (href) => pathname === href;
@@ -31,10 +30,11 @@ const Navbar = ({ isLoggedIn, handleLogout }) => {
                 className="w-full max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center h-16"
                 aria-label="Primary Navigation"
             >
-                <div className="flex items-center gap-3">
+                {/* Left section – takes available space, allows truncation */}
+                <div className="flex items-center gap-3 flex-1 min-w-0">
                     {/* Logo as a clickable link */}
-                    <Link href="/">
-                        <div className="w-12 h-12 bg-gray-200 dark:bg-gray-700 rounded-full flex-shrink-0 overflow-hidden">
+                    <Link href="/" className="flex-shrink-0">
+                        <div className="w-12 h-12 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
                             <img
                                 src="/ezexplanation_logo.png"
                                 alt="Logo"
@@ -43,16 +43,17 @@ const Navbar = ({ isLoggedIn, handleLogout }) => {
                         </div>
                     </Link>
 
-                    {/* Text link */}
+                    {/* Brand text – truncates if needed on very small screens */}
                     <Link
                         href="/"
-                        className="text-2xl font-bold text-gray-800 dark:text-white hover:text-blue-600 transition-colors ml-2"
+                        className="text-2xl font-bold text-gray-800 hover:text-blue-600 transition-colors truncate"
                     >
-                        TutorialSite
+                        Easy Explanation
                     </Link>
                 </div>
 
-                <div className="flex items-center gap-2">
+                {/* Right section – buttons never shrink */}
+                <div className="flex items-center gap-2 flex-shrink-0">
                     {/* Mobile Sidebar Toggle (only on course pages) */}
                     {isCoursePage && (
                         <button
@@ -99,12 +100,14 @@ const Navbar = ({ isLoggedIn, handleLogout }) => {
                             </li>
                         ))}
                         <li>
-                            {isLoggedIn && <button
-                                onClick={async () => await logoutAction()}
-                                style={{ cursor: 'pointer', color: 'red' }}
-                            >
-                                Logout
-                            </button>}
+                            {isLoggedIn && (
+                                <button
+                                    onClick={async () => await logoutAction()}
+                                    style={{ cursor: 'pointer', color: 'red' }}
+                                >
+                                    Logout
+                                </button>
+                            )}
                         </li>
                     </ul>
 

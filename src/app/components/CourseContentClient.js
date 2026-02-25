@@ -133,23 +133,13 @@ export default function CourseContentClient({
                                                 }
                                             `}
                                         >
-                                            {/* Section number */}
-                                            <span
-                                                className={`
-                                                    w-8 text-right text-sm font-mono mr-2
-                                                    ${isActive
-                                                        ? "text-blue-700"
-                                                        : "text-gray-400 group-hover:text-gray-600"
-                                                    }
-                                                `}
-                                            >
-                                                {chapterIdx + 1}.{topicIdx + 1}
-                                            </span>
+                                            {/* Empty spacer – preserves original indentation */}
+                                            <span className="w-8 mr-2" aria-hidden="true"></span>
 
-                                            {/* Title */}
+                                            {/* Title – full name, no truncation */}
                                             <span
                                                 className={`
-                                                    flex-1 text-sm truncate
+                                                    flex-1 text-sm
                                                     ${isActive
                                                         ? "text-blue-700 font-medium"
                                                         : "text-gray-700 group-hover:text-blue-600"
@@ -210,20 +200,13 @@ export default function CourseContentClient({
                                                 }
                                             `}
                                         >
+                                            {/* Empty spacer – preserves original indentation */}
+                                            <span className="w-8 mr-2" aria-hidden="true"></span>
+
+                                            {/* Title – full name, no truncation */}
                                             <span
                                                 className={`
-                                                    w-8 text-right text-sm font-mono mr-2
-                                                    ${isActive
-                                                        ? "text-blue-700"
-                                                        : "text-gray-400 group-hover:text-gray-600"
-                                                    }
-                                                `}
-                                            >
-                                                {chapterIdx + 1}.{topicIdx + 1}
-                                            </span>
-                                            <span
-                                                className={`
-                                                    flex-1 text-sm truncate
+                                                    flex-1 text-sm
                                                     ${isActive
                                                         ? "text-blue-700 font-medium"
                                                         : "text-gray-700 group-hover:text-blue-600"

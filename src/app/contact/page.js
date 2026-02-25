@@ -70,7 +70,7 @@ export default function ContactPage() {
                 </h2>
                 <div className="flex flex-col items-center text-center">
                     <div className="w-20 h-20 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center mb-4">
-                        <span className="text-4xl">📘</span> {/* Facebook emoji, replace with icon if desired */}
+                        <span className="text-4xl">📘</span>
                     </div>
                     <p className="text-gray-600 dark:text-gray-300 mb-4 max-w-md">
                         Follow us on Facebook for the latest updates, tutorials, and community discussions. Join our growing family of learners!
@@ -79,7 +79,8 @@ export default function ContactPage() {
                         href="https://www.facebook.com/InfographyTechnologies"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
+                        className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg shadow-md hover:shadow-lg border border-blue-700 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 no-underline"
+                        style={{ color: 'white !important' }} /* Ensures text stays white */
                     >
                         <span>Visit our Facebook page</span>
                         <span>→</span>

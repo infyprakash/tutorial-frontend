@@ -23,7 +23,6 @@ export default function LoginPage() {
 
         if (response.ok) {
             const data = await response.json();
-            console.log(data);
             await loginAction(data.access_token);
             router.push('/')
         } else {
