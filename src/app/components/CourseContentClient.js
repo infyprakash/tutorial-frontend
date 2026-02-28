@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useMemo, useEffect, useRef } from "react";
@@ -7,6 +6,8 @@ import { usePathname } from "next/navigation";
 import { useSidebar } from "../contexts/SidebarContext";
 import EditCourseContentArea from "./editCourseContent";
 import AdsenseAd from "./AdsenseAd";
+import { PanelLeftOpen, PanelLeftClose } from "lucide-react";
+
 
 export default function CourseContentClient({
     chapters,
@@ -231,7 +232,7 @@ export default function CourseContentClient({
                     onClick={() => setFullWidth(!fullWidth)}
                     className="absolute top-4 right-4 text-sm text-gray-500 hover:text-gray-800 bg-white border border-gray-200 rounded-full px-4 py-1.5 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-300 shadow-sm hover:bg-gray-50"
                 >
-                    {fullWidth ? "📖 Show sidebar" : "📚 Hide sidebar"}
+                    {fullWidth ? <PanelLeftOpen /> : <PanelLeftClose />}
                 </button>
 
                 {/* Content */}
