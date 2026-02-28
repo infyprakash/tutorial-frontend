@@ -1,10 +1,11 @@
+
 "use client";
 
 import { useState, useMemo, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useSidebar } from "../contexts/SidebarContext";
-import EditCourseContentArea from "../ui/editCourseContent";
+import EditCourseContentArea from "./editCourseContent";
 import AdsenseAd from "./AdsenseAd";
 
 export default function CourseContentClient({
@@ -102,44 +103,37 @@ export default function CourseContentClient({
                     </svg>
                 </button>
 
-                <h2 className="text-sm font-semibold text-gray-700 uppercase tracking-wider mb-4 pb-2 border-b border-gray-200">
+                <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-4 pb-2 border-b border-gray-100">
                     Contents
                 </h2>
 
                 {chapters.map((chapter, chapterIdx) => (
                     <div key={chapterIdx} className="mb-6 last:mb-0">
-                        <h3 className="text-sm font-bold text-gray-800 mb-2 pb-1 border-b border-gray-100">
+                        <h3 className="text-xs font-medium text-gray-400 uppercase tracking-wider mb-2 pb-1 border-b border-gray-50">
                             {chapter.name}
                         </h3>
 
-                        <ul className="space-y-1">
-                            {chapter.subchapters.map((topic, topicIdx) => {
+                        <ul className="space-y-0.5">
+                            {chapter.subchapters.map((topic) => {
                                 const isActive = topic.slug === subchapter_slug;
 
                                 return (
-                                    <li
-                                        key={topic.slug}
-                                        ref={isActive ? activeItemRef : null}
-                                    >
+                                    <li key={topic.slug} ref={isActive ? activeItemRef : null}>
                                         <Link
                                             href={`/${course_slug}/${topic.slug}`}
                                             onClick={() => setMobileSidebarOpen(false)}
                                             className={`
-                                                flex items-center py-1.5 px-2 rounded-md
+                                                flex items-center py-2 px-3 rounded-md
                                                 transition-all duration-200 group
                                                 ${isActive
-                                                    ? "bg-blue-50 border-l-2 border-blue-600 pl-3"
-                                                    : "hover:bg-gray-50 border-l-2 border-transparent"
+                                                    ? "bg-blue-50/80 border-l-2 border-blue-500 pl-[calc(0.75rem-1px)]"
+                                                    : "hover:bg-gray-50/80 border-l-2 border-transparent pl-3"
                                                 }
                                             `}
                                         >
-                                            {/* Empty spacer – preserves original indentation */}
-                                            <span className="w-8 mr-2" aria-hidden="true"></span>
-
-                                            {/* Title – full name, no truncation */}
                                             <span
                                                 className={`
-                                                    flex-1 text-sm
+                                                    flex-1 text-[0.95rem] leading-snug break-words
                                                     ${isActive
                                                         ? "text-blue-700 font-medium"
                                                         : "text-gray-700 group-hover:text-blue-600"
@@ -148,13 +142,11 @@ export default function CourseContentClient({
                                             >
                                                 {topic.name}
                                             </span>
-
-                                            {/* Arrow on hover (desktop only) */}
                                             <span
                                                 className={`
-                                                    ml-2 text-gray-400 group-hover:text-blue-600
-                                                    opacity-0 group-hover:opacity-100 transition-opacity
-                                                    hidden sm:inline
+                                                    ml-2 text-gray-400 group-hover:text-blue-500
+                                                    opacity-0 group-hover:opacity-100 transition-all duration-200
+                                                    group-hover:translate-x-0.5 text-sm
                                                 `}
                                             >
                                                 →
@@ -170,43 +162,36 @@ export default function CourseContentClient({
 
             {/* Desktop Sidebar */}
             <aside className={`hidden md:block ${desktopSidebarClasses}`}>
-                <h2 className="text-sm font-semibold text-gray-700 uppercase tracking-wider mb-4 pb-2 border-b border-gray-200">
+                <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-4 pb-2 border-b border-gray-100">
                     Contents
                 </h2>
 
                 {chapters.map((chapter, chapterIdx) => (
                     <div key={chapterIdx} className="mb-6 last:mb-0">
-                        <h3 className="text-sm font-bold text-gray-800 mb-2 pb-1 border-b border-gray-100">
+                        <h3 className="text-xs font-medium text-gray-400 uppercase tracking-wider mb-2 pb-1 border-b border-gray-50">
                             {chapter.name}
                         </h3>
 
-                        <ul className="space-y-1">
-                            {chapter.subchapters.map((topic, topicIdx) => {
+                        <ul className="space-y-0.5">
+                            {chapter.subchapters.map((topic) => {
                                 const isActive = topic.slug === subchapter_slug;
 
                                 return (
-                                    <li
-                                        key={topic.slug}
-                                        ref={isActive ? activeItemRef : null}
-                                    >
+                                    <li key={topic.slug} ref={isActive ? activeItemRef : null}>
                                         <Link
                                             href={`/${course_slug}/${topic.slug}`}
                                             className={`
-                                                flex items-center py-1.5 px-2 rounded-md
+                                                flex items-center py-2 px-3 rounded-md
                                                 transition-all duration-200 group
                                                 ${isActive
-                                                    ? "bg-blue-50 border-l-2 border-blue-600 pl-3"
-                                                    : "hover:bg-gray-50 border-l-2 border-transparent"
+                                                    ? "bg-blue-50/80 border-l-2 border-blue-500 pl-[calc(0.75rem-1px)]"
+                                                    : "hover:bg-gray-50/80 border-l-2 border-transparent pl-3"
                                                 }
                                             `}
                                         >
-                                            {/* Empty spacer – preserves original indentation */}
-                                            <span className="w-8 mr-2" aria-hidden="true"></span>
-
-                                            {/* Title – full name, no truncation */}
                                             <span
                                                 className={`
-                                                    flex-1 text-sm
+                                                    flex-1 text-[0.95rem] leading-snug break-words
                                                     ${isActive
                                                         ? "text-blue-700 font-medium"
                                                         : "text-gray-700 group-hover:text-blue-600"
@@ -217,8 +202,9 @@ export default function CourseContentClient({
                                             </span>
                                             <span
                                                 className={`
-                                                    ml-2 text-gray-400 group-hover:text-blue-600
-                                                    opacity-0 group-hover:opacity-100 transition-opacity
+                                                    ml-2 text-gray-400 group-hover:text-blue-500
+                                                    opacity-0 group-hover:opacity-100 transition-all duration-200
+                                                    group-hover:translate-x-0.5 text-sm
                                                 `}
                                             >
                                                 →

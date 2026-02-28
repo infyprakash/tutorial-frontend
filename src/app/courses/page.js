@@ -1,4 +1,5 @@
 import { fetchData } from "../fetchApi";
+import AdsenseAd from "../components/AdsenseAd";
 import CourseList from "../components/courseList";
 
 export default async function CoursePage() {
@@ -18,6 +19,12 @@ export default async function CoursePage() {
                 <p className="mt-4 text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
                     Explore our comprehensive library of computer science tutorials. From beginner to advanced, we've got you covered.
                 </p>
+            </div>
+
+            <div className="mb-10">
+                <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                    <AdsenseAd />
+                </div>
             </div>
 
             {/* Search / Filter Bar (static UI – functionality can be added later) */}
@@ -45,8 +52,20 @@ export default async function CoursePage() {
                 </div>
             </div>
 
+            <div className="mb-10">
+                <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                    <AdsenseAd />
+                </div>
+            </div>
+
             {/* Course List (existing component) */}
             <CourseList courses={courses} />
+
+            <div className="mt-10 mb-10">
+                <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                    <AdsenseAd />
+                </div>
+            </div>
 
             {/* Optional footer note */}
             <div className="text-center mt-12 text-sm text-gray-500 dark:text-gray-400">

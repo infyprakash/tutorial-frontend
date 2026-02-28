@@ -1,3 +1,10 @@
+/* global.css */
+
+/* If you're using Tailwind CSS v3, replace the next line with:
+   @tailwind base;
+   @tailwind components;
+   @tailwind utilities;
+*/
 @import "tailwindcss";
 
 /* ------------------------------------------------------------------------- */
@@ -5,126 +12,107 @@
 /* ------------------------------------------------------------------------- */
 body {
   font-family: var(--font-poppins), system-ui, sans-serif;
-  color: #111827; /* gray-900 – dark enough for good contrast */
+  color: #111827; /* gray-900 */
   background-color: #ffffff;
   font-size: 16px;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility; /* improves letter spacing */
 }
 
-/* Headings – bold and dark by default */
+/* Headings */
 h1,
 h2,
 h3,
 h4,
 h5,
 h6 {
-  color: #111827; /* gray-900 */
+  color: #111827;
   font-weight: 700;
   line-height: 1.2;
 }
 
-/* Links – vibrant blue, no underline on hover */
+/* Links */
 a {
   color: #2563eb; /* blue-600 */
   text-decoration: none;
 }
 a:hover {
-  text-decoration: none; /* explicitly remove underline on hover */
+  text-decoration: none;
 }
 
 /* ------------------------------------------------------------------------- */
-/* Custom prose styles for course content – clean, readable, and responsive */
-/* (inherits base font and color)                                            */
+/* Custom prose styles                                                       */
 /* ------------------------------------------------------------------------- */
 .prose {
   @apply max-w-full text-gray-800 leading-relaxed;
   font-family: var(--font-poppins), system-ui, sans-serif;
 }
 
-/* Paragraphs */
 .prose p {
   @apply mb-5 text-base sm:text-lg;
 }
 
-/* Headings */
 .prose h1 {
   @apply text-3xl sm:text-4xl font-bold mt-10 mb-5 text-gray-900;
 }
-
 .prose h2 {
   @apply text-2xl sm:text-3xl font-semibold mt-8 mb-4 text-gray-800;
 }
-
 .prose h3 {
   @apply text-xl sm:text-2xl font-semibold mt-6 mb-3 text-gray-800;
 }
-
 .prose h4 {
   @apply text-lg sm:text-xl font-medium mt-4 mb-2 text-gray-700;
 }
 
-/* Links inside prose – default underline, removed on hover */
 .prose a {
   @apply text-blue-600 underline decoration-blue-300 underline-offset-2 hover:text-blue-800 hover:no-underline transition-colors;
 }
 
-/* Lists */
 .prose ul,
 .prose ol {
   @apply pl-6 mb-5 space-y-2;
 }
-
 .prose li {
   @apply text-base sm:text-lg;
 }
 
-/* Blockquotes */
 .prose blockquote {
   @apply pl-5 italic border-l-4 border-gray-300 text-gray-600 my-6;
 }
 
-/* Code blocks */
 .prose pre {
   @apply bg-gray-100 rounded-lg p-4 overflow-x-auto text-sm mb-5;
   font-family: "Fira Code", "Courier New", monospace;
 }
-
 .prose code {
   @apply bg-gray-200 text-sm px-1.5 py-0.5 rounded text-gray-800;
   font-family: "Fira Code", "Courier New", monospace;
 }
-
-/* Inline code inside pre (override) */
 .prose pre code {
   @apply bg-transparent p-0 text-gray-800;
 }
 
-/* Images */
 .prose img {
   @apply mx-auto my-8 rounded-lg shadow-md max-w-full h-auto;
 }
 
-/* Tables */
 .prose table {
   @apply w-full border border-gray-300 rounded-lg text-left mb-5;
 }
-
 .prose th {
   @apply bg-gray-100 border border-gray-300 px-4 py-2 font-semibold;
 }
-
 .prose td {
   @apply border border-gray-300 px-4 py-2;
 }
 
-/* Horizontal rule */
 .prose hr {
   @apply my-8 border-gray-200;
 }
 
-/* Responsive adjustments */
 @media (max-width: 640px) {
   .prose {
     @apply text-base;
@@ -135,51 +123,79 @@ a:hover {
   }
 }
 
-/* Optional: dark mode support (if needed) */
-@media (prefers-color-scheme: dark) {
-  body {
-    background-color: #1c1917; /* stone-900 */
-    color: #e5e7eb; /* gray-200 */
-  }
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    color: #f9fafb; /* gray-50 */
-  }
-  a {
-    color: #60a5fa; /* blue-400 */
-  }
-  a:hover {
-    color: #93c5fd; /* blue-300 */
-  }
-  .prose {
-    @apply text-gray-200;
-  }
-  .prose h1,
-  .prose h2,
-  .prose h3,
-  .prose h4 {
-    @apply text-gray-100;
-  }
-  .prose a {
-    @apply text-blue-400 hover:text-blue-300 hover:no-underline;
-  }
-  .prose blockquote {
-    @apply text-gray-400 border-gray-600;
-  }
-  .prose pre {
-    @apply bg-gray-800 text-gray-200;
-  }
-  .prose code {
-    @apply bg-gray-700 text-gray-200;
-  }
-  .prose th {
-    @apply bg-gray-800 text-gray-200;
-  }
-  .prose td {
-    @apply border-gray-700;
-  }
+/* ------------------------------------------------------------------------- */
+/* DARK MODE – enabled by adding class "dark" to the <html> element         */
+/* All dark overrides are grouped together for easy maintenance.            */
+/* ------------------------------------------------------------------------- */
+.dark body {
+  background-color: #1c1917; /* stone-900 */
+  color: #e5e7eb; /* gray-200 */
+  /* Slightly bolder text in dark mode to reduce blurriness */
+  font-weight: 400; /* Keep normal weight, but you can try 450 if needed */
+}
+
+.dark h1,
+.dark h2,
+.dark h3,
+.dark h4,
+.dark h5,
+.dark h6 {
+  color: #f9fafb; /* gray-50 */
+  font-weight: 700; /* Keep bold */
+}
+
+.dark a {
+  color: #60a5fa; /* blue-400 */
+}
+.dark a:hover {
+  color: #93c5fd; /* blue-300 */
+}
+
+.dark .prose {
+  @apply text-gray-200;
+}
+
+.dark .prose h1,
+.dark .prose h2,
+.dark .prose h3,
+.dark .prose h4 {
+  @apply text-gray-100;
+}
+
+.dark .prose a {
+  @apply text-blue-400 hover:text-blue-300 hover:no-underline;
+}
+
+.dark .prose blockquote {
+  @apply text-gray-400 border-gray-600;
+}
+
+.dark .prose pre {
+  @apply bg-gray-800 text-gray-200;
+}
+
+.dark .prose code {
+  @apply bg-gray-700 text-gray-200;
+}
+
+.dark .prose pre code {
+  @apply bg-transparent text-gray-200;
+}
+
+.dark .prose th {
+  @apply bg-gray-800 text-gray-200 border-gray-700;
+}
+
+.dark .prose td {
+  @apply border-gray-700;
+}
+
+.dark .prose hr {
+  @apply border-gray-700;
+}
+
+/* Improve text selection contrast in dark mode */
+.dark ::selection {
+  background-color: #2563eb; /* blue-600 */
+  color: #ffffff;
 }

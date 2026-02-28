@@ -1,9 +1,9 @@
 export async function fetchData(url) {
-    const res = await fetch(`${process.env.HOST}tutorial/${url}`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_HOST}tutorial/${url}`, {
         method: 'GET',
         headers: {
             'accept': 'application/json',
-            'token': process.env.API_TOKEN
+            'token': process.env.NEXT_PUBLIC_API_TOKEN
         },
         // next: { revalidate: 60 }
     });
@@ -17,11 +17,11 @@ export async function fetchData(url) {
 
 
 export async function fetchNecData(url) {
-    const res = await fetch(`${process.env.HOST}nec/${url}`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_HOST}nec/${url}`, {
         method: 'GET',
         headers: {
             'accept': 'application/json',
-            'token': process.env.API_TOKEN
+            'token': process.env.NEXT_PUBLIC_API_TOKEN
         },
         // next: { revalidate: 60 }
     });
